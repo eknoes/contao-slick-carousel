@@ -1,0 +1,30 @@
+.slick-carousel {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.slick-track {
+    display: flex;
+    align-items: center;
+}
+
+.slick-slide {
+    margin: 9px;
+    padding: 9px;
+    vertical-align: middle;
+}
+
+.slick-slide p {
+    color: rgb(152, 126, 7);
+    font: 18px/22px 'Roboto', 'sans-serif';
+}
+
+.slick-slide em {
+    font-family: 'serif';
+    font-size: 21px;
+    margin-bottom: 15px;
+}
+
+.slick-prev::before, .slick-next::before {
+    color: black;
+}

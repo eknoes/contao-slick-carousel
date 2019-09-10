@@ -1,0 +1,100 @@
+<!-- indexer::stop -->
+<?php
+    if($this->items == null && $this->orderSRC) {
+        //Gallery Template
+        $gallery = true;
+        $items = [];
+        $images = \FilesModel::findMultipleByUuids(deserialize($this->orderSRC));
+        while ($images->next()) {
+            $items[] = sprintf('<img data-lazy="%s" />', $images->path);
+        }
+        $this->items = $items;
+    }
+
+    if($this->headline) {
+        printf("<%s>%s</%s>", $this->hl, $this->headline, $this->hl);
+    }
+?>
+
+<?php
+$i = 0;
+do {
+?>
+<div class="slick-carousel" id="carousel-<?= $this->id . ($i == 1 ? '-nav' : '') ?>">
+    <?php
+    $imgNum = 1;
+    foreach ($this->items as $item) {
+        ?>
+            <div class="slide">
+                <?php
+                echo $item;
+                ?>
+                <?php
+                    if($gallery && $i == 0) {
+                        echo '<figcaption class="caption">Image ' . $imgNum . ' / ' . count($this->items) . '</figcaption>';
+                    }
+                ?>
+            </div>
+
+        <?php
+        $imgNum++;
+    }
+    $i++;
+    ?>
+</div>
+<?php } while($gallery && $i < 2); ?>
+<script>
+    $(document).ready(function () {
+        $('#carousel-<?= $this->id ?>').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            <?= $gallery ? '' : 'autoplay: true,' ?>
+            <?= $gallery ? '' : 'autoplaySpeed: 10000,' ?>
+            adaptiveHeight: false,
+            arrows: <?= $gallery ? 'false' : 'true' ?>,
+            infinite: true,
+            fade: <?= $gallery ? 'true' : 'false' ?>,
+            dots: <?= $gallery ? 'false' : 'true' ?>,
+            lazyLoad: 'ondemand'
+        });
+        <?php if($gallery) { ?>
+        $('#carousel-<?= $this->id ?>-nav').slick({
+            slidesToShow: 5,
+            slidesToScroll: 1,
+            autoplay: true,
+            autoplaySpeed: 4000,
+            adaptiveHeight: false,
+            arrows: true,
+            infinite: true,
+            asNavFor: '#carousel-<?= $this->id ?>',
+            dots: false,
+            focusOnSelect: true,
+            lazyLoad: 'ondemand',
+            responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    infinite: true,
+                    dots: true
+                }
+            },
+        {
+            breakpoint: 600,
+                settings: {
+                slidesToShow: 2,
+                slidesToScroll: 1
+        }
+        },
+        {
+            breakpoint: 480,
+            slidesToShow: 1,
+            slidesToScroll: 1
+        }
+        ]
+        });
+        <?php } ?>
+    });
+</script>
+<!-- indexer::continue -->
